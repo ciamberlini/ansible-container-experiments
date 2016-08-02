@@ -1,0 +1,38 @@
+# Questo file contiene la definizione di ogni container che verrà creato
+
+version: "1"
+services:
+
+  lb:
+    image: cargonauts/consul-haproxy:latest
+    command: "-consul consul.service.consul:8500"
+    ports:
+      - "80:80"
+#      - "8080"
+    links:
+      - "consul"
+
+  consul:
+    image: progrium/consul:latest
+    command: "-server -bootstrap"
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+#    environment:
+#      SERVICE_53_IGNORE: 'yes'
+#      SERVICE_8300_IGNORE: 'yes'
+#      SERVICE_8301_IGNORE: 'yes'
+#      SERVICE_8302_IGNORE: 'yes'
+#      SERVICE_8400_IGNORE: 'yes'
+#      SERVICE_8500_NAME: 'consul-admin_infra'
+
+  registrator:
+    image: gliderlabs/registrator:latest
+    command: "-internal consul://consul:8500"
+    links:
+      - "consul"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock"
+
+registries: {}

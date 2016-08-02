@@ -1,0 +1,18 @@
+# Questo file descrive i playbook da eseguire su ogni container deployato
+
+- hosts: all
+  roles: 
+    - common
+  
+- hosts: lb
+  roles: 
+    - nginx
+  
+- hosts: consul
+  roles: 
+    - consul
+
+- hosts: registrator
+  roles: 
+    - registrator
+	
